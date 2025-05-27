@@ -1,0 +1,3 @@
+# Aucune dépendance externe nécessaire 
+tqdm==4.66.1
+paramiko==3.4.0 
