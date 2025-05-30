@@ -80,7 +80,13 @@
             $('#systemsTable').DataTable({
                 ajax: '/api/systems',
                 columns: [
-                    { data: 'hostname' },
+                    { 
+                        data: 'hostname',
+                        render: function(data) {
+                            if (!data) return '';
+                            return data.split('.')[0];
+                        }
+                    },
                     { data: 'ip' },
                     { 
                         data: 'last_update',
@@ -97,10 +103,19 @@
                             if (percent < 20) colorClass = 'battery-low';
                             else if (percent < 50) colorClass = 'battery-medium';
                             
+                            let extraInfo = '';
+                            if (data.max_capacity_percent && data.max_capacity_percent !== 'null') {
+                                extraInfo += `<div class='small text-muted'>Capacité max: ${data.max_capacity_percent}%</div>`;
+                            }
+                            if (data.condition && data.condition !== 'null') {
+                                extraInfo += `<div class='small text-muted'>État: ${data.condition}</div>`;
+                            }
+                            
                             return `<div class="${colorClass}">
                                 <i class="fas fa-battery-${Math.ceil(percent/25)} me-1"></i>
-                                ${percent}% ${data.power_plugged ? '<i class="fas fa-plug"></i>' : ''}
+                                ${percent}% ${data.power_plugged === 'true' ? '<i class="fas fa-plug"></i>' : ''}
                                 ${data.time_left ? `(${data.time_left})` : ''}
+                                ${extraInfo}
                             </div>`;
                         }
                     },
@@ -120,7 +135,7 @@
                             
                             return `<div class="${colorClass}">
                                 <i class="fas fa-hdd me-1"></i>
-                                ${data.used}GB / ${data.total}GB (${percent}%)
+                                ${data.free}GB / ${data.total}GB libres (${percent}%)
                             </div>`;
                         }
                     }

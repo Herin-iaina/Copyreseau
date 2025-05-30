@@ -306,7 +306,7 @@ def export_csv():
         systems = []
         for filename in os.listdir(SYSTEM_INFO_DIR):
             if filename.endswith('.json'):
-                hostname = filename[:-5]
+                hostname = filename[:-5].split('.')[0]  # tronquer le hostname
                 file_path = os.path.join(SYSTEM_INFO_DIR, filename)
                 with open(file_path, 'r') as f:
                     data = json.load(f)
@@ -318,22 +318,21 @@ def export_csv():
                         'IP': data.get('ip'),
                         'Last Update': data.get('timestamp'),
                         'Battery %': battery.get('percent'),
+                        'Battery Max Capacity (%)': battery.get('max_capacity_percent'),
+                        'Battery Condition': battery.get('condition'),
                         'Power Plugged': battery.get('power_plugged'),
                         'Battery Time Left': battery.get('time_left'),
                         'Current User': system_info.get('current_user'),
                         'Boot Time': system_info.get('boot_time'),
                         'Disk Total (GB)': disk.get('total'),
-                        'Disk Used (GB)': disk.get('used'),
                         'Disk Free (GB)': disk.get('free'),
                         'Disk Usage %': disk.get('percent')
                     })
-        
         # Créer le CSV en mémoire
         output = io.StringIO()
         writer = csv.DictWriter(output, fieldnames=systems[0].keys())
         writer.writeheader()
         writer.writerows(systems)
-        
         # Préparer la réponse
         output.seek(0)
         return send_file(
@@ -353,7 +352,7 @@ def export_xlsx():
         systems = []
         for filename in os.listdir(SYSTEM_INFO_DIR):
             if filename.endswith('.json'):
-                hostname = filename[:-5]
+                hostname = filename[:-5].split('.')[0]  # tronquer le hostname
                 file_path = os.path.join(SYSTEM_INFO_DIR, filename)
                 with open(file_path, 'r') as f:
                     data = json.load(f)
@@ -365,22 +364,21 @@ def export_xlsx():
                         'IP': data.get('ip'),
                         'Last Update': data.get('timestamp'),
                         'Battery %': battery.get('percent'),
+                        'Battery Max Capacity (%)': battery.get('max_capacity_percent'),
+                        'Battery Condition': battery.get('condition'),
                         'Power Plugged': battery.get('power_plugged'),
                         'Battery Time Left': battery.get('time_left'),
                         'Current User': system_info.get('current_user'),
                         'Boot Time': system_info.get('boot_time'),
                         'Disk Total (GB)': disk.get('total'),
-                        'Disk Used (GB)': disk.get('used'),
                         'Disk Free (GB)': disk.get('free'),
                         'Disk Usage %': disk.get('percent')
                     })
-        
         # Créer le DataFrame et exporter en XLSX
         df = pd.DataFrame(systems)
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
             df.to_excel(writer, sheet_name='Systems Info', index=False)
-        
         output.seek(0)
         return send_file(
             output,
