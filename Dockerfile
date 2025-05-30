@@ -31,10 +31,11 @@ ENV BASE_DIR=/data \
     DB_FILE=/data/system_info.db \
     SYSTEM_INFO_DIR=/data/system_info \
     TEMPLATES_DIR=/data/templates \
-    APPS_DIR=/data/apps
+    APPS_DIR=/data/apps \
+    PYTHONUNBUFFERED=1
 
 # Expose the server port
 EXPOSE 5001
 
-# Run the server
-CMD ["python", "macos_installer_server.py"] 
+# Run the server with Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:5001", "--workers", "4", "--timeout", "120", "macos_installer_server:app"] 
