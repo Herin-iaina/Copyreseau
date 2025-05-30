@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-SERVER_URL="http://172.17.19.26:5001"
+SERVER_URL="http://172.17.18.173:5001"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="$PROJECT_DIR/logs"
 LOG_FILE="$LOG_DIR/host_client.log"
@@ -57,7 +57,17 @@ get_battery_info() {
         local power_source=$(echo "$battery_info" | grep -o "AC Power\|Battery Power")
         local time_remaining=$(echo "$battery_info" | grep -o "[0-9]*:[0-9]* remaining" | sed 's/ remaining//')
         
-        echo "{\"percent\":$percent,\"power_plugged\":$(if [ "$power_source" = "AC Power" ]; then echo "true"; else echo "false"; fi),\"time_left\":\"$time_remaining\"}"
+        # Capacité maximale et état de la batterie (version française)
+        if [ -f "/usr/sbin/system_profiler" ]; then
+            local max_capacity=$(system_profiler SPPowerDataType | awk -F': ' '/Maximum Capacity/ {gsub(/[^0-9]/, "", $2); print $2}')
+            local condition=$(system_profiler SPPowerDataType | awk -F': ' '/Condition/ {print $2; exit}')
+            if [ -z "$max_capacity" ]; then max_capacity="null"; fi
+        else
+            local max_capacity="null"
+            local condition="null"
+        fi
+        
+        echo "{\"percent\":\"$percent\",\"power_plugged\":\"$(if [ \"$power_source\" = \"AC Power\" ]; then echo "true"; else echo "false"; fi)\",\"time_left\":\"$time_remaining\",\"max_capacity_percent\":\"$max_capacity\",\"condition\":\"$condition\"}"
     else
         echo "null"
     fi
@@ -124,7 +134,7 @@ get_system_info() {
     local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
     local hostname=$(get_hostname)
     local ip=$(get_ip)
-    local current_user=$(whoami)
+    local current_user=$(stat -f%Su /dev/console)
     
     # Obtenir les statistiques réseau
     local bytes_sent=$(netstat -ib | awk '/en0/ {print $7}' | head -n1)
@@ -238,3 +248,14 @@ fi
 
 # Démarrer le daemon
 run_daemon 
+
+# Nouvelle fonction pour obtenir la santé de la batterie
+get_battery_health() {
+    if [ -f "/usr/sbin/system_profiler" ]; then
+        local max_capacity=$(system_profiler SPPowerDataType | awk -F': ' '/Full Charge Capacity/ {full=$2} /Design Capacity/ {design=$2} END {if (full && design) print int((full/design)*100)}')
+        local condition=$(system_profiler SPPowerDataType | awk -F': ' '/Condition/ {print $2; exit}')
+        echo "{\"max_capacity_percent\":$max_capacity,\"condition\":\"$condition\"}"
+    else
+        echo "null"
+    fi
+} 

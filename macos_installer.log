@@ -478,3 +478,32 @@
 2025-05-30 12:28:35,753 - INFO - [33mPress CTRL+C to quit[0m
 2025-05-30 12:28:37,469 - INFO - 127.0.0.1 - - [30/May/2025 12:28:37] "GET / HTTP/1.1" 200 -
 2025-05-30 12:28:37,622 - INFO - 127.0.0.1 - - [30/May/2025 12:28:37] "GET /api/systems?_=1748600917517 HTTP/1.1" 200 -
+2025-05-30 12:52:08,980 - INFO - 172.17.18.173 - - [30/May/2025 12:52:08] "[33mGET /status HTTP/1.1[0m" 404 -
+2025-05-30 12:52:09,759 - INFO - Informations système reçues de MBP204-SMARTELIA.local (172.17.18.173)
+2025-05-30 12:52:09,759 - INFO - 172.17.18.173 - - [30/May/2025 12:52:09] "POST /system_info HTTP/1.1" 200 -
+2025-05-30 12:52:09,793 - INFO - 172.17.18.173 - - [30/May/2025 12:52:09] "[33mPOST /report HTTP/1.1[0m" 404 -
+2025-05-30 13:00:05,065 - INFO - Base de données initialisée avec succès
+2025-05-30 13:00:05,065 - INFO - Démarrage du serveur sur le port 5001
+2025-05-30 13:00:05,065 - INFO - Dossier des fichiers: /Users/arthur_smartelia/ScanIp/files
+2025-05-30 13:00:05,073 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://172.17.18.173:5001
+2025-05-30 13:00:05,073 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-30 13:00:47,491 - INFO - 172.17.18.173 - - [30/May/2025 13:00:47] "[33mGET /status HTTP/1.1[0m" 404 -
+2025-05-30 13:00:48,480 - ERROR - Erreur lors de la réception des informations système: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+2025-05-30 13:00:48,480 - INFO - 172.17.18.173 - - [30/May/2025 13:00:48] "[35m[1mPOST /system_info HTTP/1.1[0m" 500 -
+2025-05-30 13:10:25,921 - INFO - 172.17.18.173 - - [30/May/2025 13:10:25] "[33mGET /status HTTP/1.1[0m" 404 -
+2025-05-30 13:10:26,834 - ERROR - Erreur lors de la réception des informations système: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+2025-05-30 13:10:26,834 - INFO - 172.17.18.173 - - [30/May/2025 13:10:26] "[35m[1mPOST /system_info HTTP/1.1[0m" 500 -
+2025-05-30 13:13:48,082 - INFO - 172.17.18.173 - - [30/May/2025 13:13:48] "[33mGET /status HTTP/1.1[0m" 404 -
+2025-05-30 13:13:48,952 - ERROR - Erreur lors de la réception des informations système: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+2025-05-30 13:13:48,953 - INFO - 172.17.18.173 - - [30/May/2025 13:13:48] "[35m[1mPOST /system_info HTTP/1.1[0m" 500 -
+2025-05-30 13:16:18,299 - INFO - 172.17.18.173 - - [30/May/2025 13:16:18] "[33mGET /status HTTP/1.1[0m" 404 -
+2025-05-30 13:16:19,073 - INFO - Informations système reçues de MBP204-SMARTELIA.local (172.17.18.173)
+2025-05-30 13:16:19,073 - INFO - 172.17.18.173 - - [30/May/2025 13:16:19] "POST /system_info HTTP/1.1" 200 -
+2025-05-30 13:16:19,103 - INFO - 172.17.18.173 - - [30/May/2025 13:16:19] "[33mPOST /report HTTP/1.1[0m" 404 -
+2025-05-30 13:22:44,220 - INFO - 172.17.18.173 - - [30/May/2025 13:22:44] "[33mGET /status HTTP/1.1[0m" 404 -
+2025-05-30 13:22:45,109 - INFO - Informations système reçues de MBP204-SMARTELIA.local (172.17.18.173)
+2025-05-30 13:22:45,109 - INFO - 172.17.18.173 - - [30/May/2025 13:22:45] "POST /system_info HTTP/1.1" 200 -
+2025-05-30 13:22:45,137 - INFO - 172.17.18.173 - - [30/May/2025 13:22:45] "[33mPOST /report HTTP/1.1[0m" 404 -
