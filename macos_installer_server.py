@@ -9,6 +9,7 @@ from pathlib import Path
 import csv
 import pandas as pd
 from datetime import datetime
+import json
 
 # Configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -151,6 +152,40 @@ def report_client_info():
             
     except Exception as e:
         log("ERROR", f"Erreur lors de la réception des informations client: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/system_info', methods=['POST'])
+def receive_system_info():
+    """Reçoit les informations système du client"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Aucune donnée reçue'}), 400
+
+        # Vérifier les champs obligatoires
+        required_fields = ['timestamp', 'hostname', 'ip', 'system_info']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Champ manquant: {field}'}), 400
+
+        # Créer le dossier data s'il n'existe pas
+        data_dir = os.path.join(BASE_DIR, 'data')
+        os.makedirs(data_dir, exist_ok=True)
+
+        # Sauvegarder les données dans un fichier JSON
+        hostname = data['hostname']
+        timestamp = data['timestamp'].replace(':', '-').replace(' ', '_')
+        filename = f"system_info_{hostname}_{timestamp}.json"
+        file_path = os.path.join(data_dir, filename)
+
+        with open(file_path, 'w') as f:
+            json.dump(data, f, indent=4)
+
+        log("INFO", f"Informations système reçues de {hostname} ({data['ip']})")
+        return jsonify({'message': 'Informations système reçues avec succès'}), 200
+
+    except Exception as e:
+        log("ERROR", f"Erreur lors de la réception des informations système: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
