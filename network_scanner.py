@@ -17,6 +17,17 @@ USE_SSH = True  # Mettre à False pour désactiver SSH
 SSH_USERNAME = "smartelia"  # Remplacer par votre nom d'utilisateur
 SSH_PASSWORD = "WeAr24DM!n"  # Remplacer par votre mot de passe
 
+# Configuration des applications macOS
+APPLICATIONS_TO_CHECK = [
+    "MonApplication.app",
+    "AutreApplication.app",
+    # Ajoutez ici les noms des applications à vérifier
+]
+
+# Chemins des applications sur macOS
+APPLICATIONS_PATH = "Applications"  # Chemin relatif
+FILES_PATH = "/Users/smartelia/files"  # Chemin sur le serveur
+
 def ping(ip):
     """Ping an IP address and return True if it responds"""
     param = '-n' if platform.system().lower() == 'windows' else '-c'
@@ -43,6 +54,40 @@ def get_mac_address(ip):
         pass
     return "Unknown"
 
+def check_and_install_application(ssh, application_name):
+    """Vérifie si l'application existe sur macOS et l'installe si nécessaire"""
+    try:
+        # Vérifier si l'application existe dans le dossier Applications
+        check_cmd = f'ls ~/{APPLICATIONS_PATH}/{application_name}'
+        
+        stdin, stdout, stderr = ssh.exec_command(check_cmd)
+        if stdout.channel.recv_exit_status() == 0:
+            # L'application existe, on vérifie si une mise à jour est nécessaire
+            print(f"Mise à jour de {application_name} sur {ssh.get_transport().getpeername()[0]}")
+            # Commande pour mettre à jour l'application
+            update_cmd = f'cd {FILES_PATH} && ./update_{application_name}'
+            ssh.exec_command(update_cmd)
+        else:
+            # L'application n'existe pas, on l'installe
+            print(f"Installation de {application_name} sur {ssh.get_transport().getpeername()[0]}")
+            
+            # Créer le dossier Applications s'il n'existe pas
+            ssh.exec_command(f'mkdir -p ~/{APPLICATIONS_PATH}')
+            
+            # Copier l'application depuis le serveur vers le client
+            copy_cmd = f'scp -r {FILES_PATH}/{application_name} ~/{APPLICATIONS_PATH}/'
+            ssh.exec_command(copy_cmd)
+            
+            # Vérifier si l'installation a réussi
+            time.sleep(5)  # Attendre un peu pour l'installation
+            stdin, stdout, stderr = ssh.exec_command(check_cmd)
+            if stdout.channel.recv_exit_status() == 0:
+                print(f"Installation de {application_name} réussie")
+            else:
+                print(f"Échec de l'installation de {application_name}")
+    except Exception as e:
+        print(f"Erreur lors de la vérification/installation de {application_name}: {str(e)}")
+
 def try_ssh_connection(ip, username, password):
     """Try to connect via SSH and get hostname"""
     try:
@@ -53,6 +98,11 @@ def try_ssh_connection(ip, username, password):
         # Exécuter la commande hostname
         stdin, stdout, stderr = ssh.exec_command('hostname')
         hostname = stdout.read().decode().strip()
+        
+        # Vérifier et installer les applications si c'est une machine Smartelia
+        if is_smartelia_machine(hostname):
+            for app in APPLICATIONS_TO_CHECK:
+                check_and_install_application(ssh, app)
         
         ssh.close()
         return hostname if hostname else "Unknown"
