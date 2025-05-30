@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surveillance des Systèmes</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        .table th {
+            background-color: #f8f9fa;
+        }
+        .battery-low {
+            color: #dc3545;
+        }
+        .battery-medium {
+            color: #ffc107;
+        }
+        .battery-high {
+            color: #198754;
+        }
+        .disk-warning {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-desktop me-2"></i>
+                    Surveillance des Systèmes
+                </h4>
+                <div>
+                    <a href="/export/csv" class="btn btn-light me-2">
+                        <i class="fas fa-file-csv me-1"></i> Export CSV
+                    </a>
+                    <a href="/export/xlsx" class="btn btn-light">
+                        <i class="fas fa-file-excel me-1"></i> Export Excel
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="systemsTable" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Hostname</th>
+                            <th>IP</th>
+                            <th>Dernière Mise à Jour</th>
+                            <th>Batterie</th>
+                            <th>Utilisateur</th>
+                            <th>Démarrage</th>
+                            <th>Disque</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#systemsTable').DataTable({
+                ajax: '/api/systems',
+                columns: [
+                    { data: 'hostname' },
+                    { data: 'ip' },
+                    { 
+                        data: 'last_update',
+                        render: function(data) {
+                            return new Date(data).toLocaleString();
+                        }
+                    },
+                    { 
+                        data: 'battery',
+                        render: function(data) {
+                            if (!data) return 'N/A';
+                            const percent = data.percent;
+                            let colorClass = 'battery-high';
+                            if (percent < 20) colorClass = 'battery-low';
+                            else if (percent < 50) colorClass = 'battery-medium';
+                            
+                            return `<div class="${colorClass}">
+                                <i class="fas fa-battery-${Math.ceil(percent/25)} me-1"></i>
+                                ${percent}% ${data.power_plugged ? '<i class="fas fa-plug"></i>' : ''}
+                                ${data.time_left ? `(${data.time_left})` : ''}
+                            </div>`;
+                        }
+                    },
+                    { data: 'current_user' },
+                    { 
+                        data: 'boot_time',
+                        render: function(data) {
+                            return new Date(data).toLocaleString();
+                        }
+                    },
+                    { 
+                        data: 'disk',
+                        render: function(data) {
+                            if (!data) return 'N/A';
+                            const percent = data.percent;
+                            const colorClass = percent > 90 ? 'disk-warning' : '';
+                            
+                            return `<div class="${colorClass}">
+                                <i class="fas fa-hdd me-1"></i>
+                                ${data.used}GB / ${data.total}GB (${percent}%)
+                            </div>`;
+                        }
+                    }
+                ],
+                order: [[2, 'desc']],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
+                },
+                pageLength: 25,
+                autoWidth: false,
+                responsive: true
+            });
+        });
+    </script>
+</body>
+</html>

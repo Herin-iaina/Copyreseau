@@ -17,6 +17,7 @@ FILES_FOLDER = os.path.join(BASE_DIR, 'files')  # Dossier contenant les fichiers
 LOG_FILE = os.path.join(BASE_DIR, 'macos_installer.log')
 SERVER_PORT = 5001
 SCAN_RESULTS_FILE = os.path.join(BASE_DIR, 'scan_results.csv')
+SYSTEM_INFO_DIR = os.path.join(BASE_DIR, 'data')
 
 # Configuration du logging
 logging.basicConfig(
@@ -186,6 +187,61 @@ def receive_system_info():
 
     except Exception as e:
         log("ERROR", f"Erreur lors de la réception des informations système: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/system_info/<hostname>', methods=['GET'])
+def get_system_info(hostname):
+    """Récupère les informations système d'un hôte spécifique"""
+    try:
+        file_path = os.path.join(SYSTEM_INFO_DIR, f"{hostname}.json")
+        
+        if os.path.exists(file_path):
+            with open(file_path, 'r') as f:
+                data = json.load(f)
+                
+            # Extraire les informations spécifiques
+            system_info = data.get('system_info', {})
+            response = {
+                'hostname': data.get('hostname'),
+                'ip': data.get('ip'),
+                'timestamp': data.get('timestamp'),
+                'battery': system_info.get('battery', {}),
+                'current_user': system_info.get('current_user'),
+                'boot_time': system_info.get('boot_time'),
+                'disk': system_info.get('disk', {})
+            }
+            return jsonify(response), 200
+        else:
+            return jsonify({'error': 'Aucune information trouvée pour cet hôte'}), 404
+            
+    except Exception as e:
+        log("ERROR", f"Erreur lors de la récupération des informations système: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/system_info', methods=['GET'])
+def list_all_systems():
+    """Liste toutes les machines surveillées avec leurs informations système"""
+    try:
+        systems = []
+        for filename in os.listdir(SYSTEM_INFO_DIR):
+            if filename.endswith('.json'):
+                hostname = filename[:-5]  # Enlever l'extension .json
+                file_path = os.path.join(SYSTEM_INFO_DIR, filename)
+                with open(file_path, 'r') as f:
+                    data = json.load(f)
+                    system_info = data.get('system_info', {})
+                    systems.append({
+                        'hostname': hostname,
+                        'ip': data.get('ip'),
+                        'last_update': data.get('timestamp'),
+                        'battery': system_info.get('battery', {}),
+                        'current_user': system_info.get('current_user'),
+                        'boot_time': system_info.get('boot_time'),
+                        'disk': system_info.get('disk', {})
+                    })
+        return jsonify({'systems': systems}), 200
+    except Exception as e:
+        log("ERROR", f"Erreur lors de la liste des systèmes: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

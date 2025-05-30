@@ -369,3 +369,14 @@
 2025-05-28 14:29:50,797 - INFO - 172.17.18.46 - - [28/May/2025 14:29:50] "GET /status HTTP/1.1" 200 -
 2025-05-28 14:29:50,872 - INFO - Mise à jour réussie pour MBP261-SMARTELIA.local (172.17.18.46)
 2025-05-28 14:29:50,872 - INFO - 172.17.18.46 - - [28/May/2025 14:29:50] "POST /report HTTP/1.1" 200 -
+2025-05-30 10:00:48,383 - INFO - Démarrage du serveur sur le port 5001
+2025-05-30 10:00:48,383 - INFO - Dossier des fichiers: /Users/arthur_smartelia/ScanIp/files
+2025-05-30 10:00:48,398 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://172.17.18.173:5001
+2025-05-30 10:00:48,398 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-30 10:00:50,422 - INFO - 127.0.0.1 - - [30/May/2025 10:00:50] "[33mGET / HTTP/1.1[0m" 404 -
+2025-05-30 10:00:51,522 - INFO - 127.0.0.1 - - [30/May/2025 10:00:51] "[33mGET / HTTP/1.1[0m" 404 -
+2025-05-30 10:00:57,871 - INFO - 127.0.0.1 - - [30/May/2025 10:00:57] "[33mGET / HTTP/1.1[0m" 404 -
+2025-05-30 10:01:02,404 - INFO - 127.0.0.1 - - [30/May/2025 10:01:02] "[33mGET / HTTP/1.1[0m" 404 -
