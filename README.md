@@ -46,3 +46,24 @@ Le script va :
 ## Note
 
 Ce script utilise Nmap pour scanner le réseau, ce qui est plus fiable et ne nécessite pas de droits administrateur dans la plupart des cas. 
+
+
+Comment utiliser --network host dans docker build
+bash
+Copier
+Modifier
+docker build --network=host -t macos-installer .
+
+🚀 Ensuite, tu lances le conteneur en réseau host aussi 
+docker run -d \
+  --name macos-installer \
+  --network host \
+  -v "$(pwd)/data/files:/data/files" \
+  -v "$(pwd)/data/system_info:/data/system_info" \
+  -v "$(pwd)/data/templates:/data/templates" \
+  -v "$(pwd)/data/apps:/data/apps" \
+  -v "$(pwd)/data/macos_installer.log:/data/macos_installer.log" \
+  -v "$(pwd)/data/system_info.db:/data/system_info.db" \
+  -v "$(pwd)/data/scan_results.csv:/data/scan_results.csv" \
+  --restart unless-stopped \
+  macos-installer
