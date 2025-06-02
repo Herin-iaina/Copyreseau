@@ -32,6 +32,47 @@
         .disk-warning {
             color: #dc3545;
         }
+
+        /* Nouveaux styles pour le modal */
+        .system-details {
+            font-size: 0.9rem;
+        }
+        .system-details .section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #f8f9fa;
+        }
+        .system-details .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #0d6efd;
+        }
+        .system-details .info-item {
+            display: flex;
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0;
+        }
+        .system-details .info-label {
+            font-weight: 500;
+            min-width: 150px;
+            color: #495057;
+        }
+        .system-details .info-value {
+            flex: 1;
+        }
+        .system-details .apps-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .system-details .app-badge {
+            background-color: #e9ecef;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
@@ -80,7 +121,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <pre id="systemDetails" class="bg-light p-3 rounded"></pre>
+                    <div id="systemDetails" class="system-details">
+                        <!-- Les données seront insérées ici dynamiquement -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -202,13 +245,91 @@
             // Gestionnaire de clic sur une ligne
             $('#systemsTable tbody').on('click', 'tr', function() {
                 const data = $('#systemsTable').DataTable().row(this).data();
-                // Récupérer les données complètes depuis l'API
-                $.get('/api/systems', function(allData) {
-                    const systemData = allData.find(system => system.hostname === data.hostname);
-                    const modal = new bootstrap.Modal(document.getElementById('systemDetailsModal'));
-                    document.getElementById('systemDetails').textContent = JSON.stringify(systemData, null, 2);
-                    modal.show();
-                });
+                const modal = new bootstrap.Modal(document.getElementById('systemDetailsModal'));
+                
+                // Créer le contenu HTML structuré
+                const content = `
+                    <div class="section">
+                        <div class="section-title">Informations Générales</div>
+                        <div class="info-item">
+                            <span class="info-label">Hostname:</span>
+                            <span class="info-value">${data.hostname}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Adresse IP:</span>
+                            <span class="info-value">${data.ip}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Dernière mise à jour:</span>
+                            <span class="info-value">${new Date(data.last_update).toLocaleString()}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Utilisateur actuel:</span>
+                            <span class="info-value">${data.current_user}</span>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">Ressources Système</div>
+                        <div class="info-item">
+                            <span class="info-label">CPU:</span>
+                            <span class="info-value">${data.cpu ? `${data.cpu.percent}% (${data.cpu.count} cœurs)` : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Mémoire:</span>
+                            <span class="info-value">${data.memory ? `${data.memory.used.toFixed(1)}GB / ${data.memory.total}GB (${data.memory.percent}%)` : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Disque:</span>
+                            <span class="info-value">${data.disk ? `${data.disk.free}GB / ${data.disk.total}GB libres (${data.disk.percent}%)` : 'N/A'}</span>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">Batterie</div>
+                        <div class="info-item">
+                            <span class="info-label">Niveau:</span>
+                            <span class="info-value">${data.battery ? `${data.battery.percent}%` : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">État:</span>
+                            <span class="info-value">${data.battery ? (data.battery.power_plugged === 'true' ? 'Branché' : 'Sur batterie') : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Temps restant:</span>
+                            <span class="info-value">${data.battery && data.battery.time_left ? data.battery.time_left : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Capacité maximale:</span>
+                            <span class="info-value">${data.battery && data.battery.max_capacity_percent ? `${data.battery.max_capacity_percent}%` : 'N/A'}</span>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">Applications en cours</div>
+                        <div class="apps-list">
+                            ${data.running_apps ? Object.entries(data.running_apps)
+                                .filter(([_, isRunning]) => isRunning)
+                                .map(([app]) => `<span class="app-badge">${app}</span>`)
+                                .join('') : 'Aucune application en cours'}
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">Réseau</div>
+                        <div class="info-item">
+                            <span class="info-label">Données envoyées:</span>
+                            <span class="info-value">${data.network ? `${(data.network.bytes_sent / 1024 / 1024).toFixed(2)} MB` : 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Données reçues:</span>
+                            <span class="info-value">${data.network ? `${(data.network.bytes_recv / 1024 / 1024).toFixed(2)} MB` : 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('systemDetails').innerHTML = content;
+                modal.show();
             });
         });
     </script>

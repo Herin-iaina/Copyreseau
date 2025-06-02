@@ -758,3 +758,37 @@
 2025-06-02 10:13:02,372 - INFO - 172.17.18.160 - - [02/Jun/2025 10:13:02] "GET / HTTP/1.1" 200 -
 2025-06-02 10:13:02,490 - INFO - 172.17.18.160 - - [02/Jun/2025 10:13:02] "GET /api/systems?_=1748851982436 HTTP/1.1" 200 -
 2025-06-02 10:13:29,388 - INFO - 172.17.18.160 - - [02/Jun/2025 10:13:29] "GET /export/csv HTTP/1.1" 200 -
+2025-06-02 10:15:15,827 - INFO - 172.17.18.160 - - [02/Jun/2025 10:15:15] "GET / HTTP/1.1" 200 -
+2025-06-02 10:15:16,124 - INFO - 172.17.18.160 - - [02/Jun/2025 10:15:16] "GET /api/systems?_=1748852115903 HTTP/1.1" 200 -
+2025-06-02 10:16:11,921 - INFO - 172.17.18.160 - - [02/Jun/2025 10:16:11] "GET / HTTP/1.1" 200 -
+2025-06-02 10:16:12,026 - INFO - 172.17.18.160 - - [02/Jun/2025 10:16:12] "GET /api/systems?_=1748852171988 HTTP/1.1" 200 -
+2025-06-02 10:16:13,805 - INFO - 172.17.18.160 - - [02/Jun/2025 10:16:13] "GET /api/systems HTTP/1.1" 200 -
+2025-06-02 10:16:53,367 - INFO - 172.17.18.160 - - [02/Jun/2025 10:16:53] "GET / HTTP/1.1" 200 -
+2025-06-02 10:16:53,485 - INFO - 172.17.18.160 - - [02/Jun/2025 10:16:53] "GET /api/systems?_=1748852213411 HTTP/1.1" 200 -
+2025-06-02 10:16:54,358 - INFO - 172.17.18.160 - - [02/Jun/2025 10:16:54] "GET / HTTP/1.1" 200 -
+2025-06-02 10:16:54,448 - INFO - 172.17.18.160 - - [02/Jun/2025 10:16:54] "GET /api/systems?_=1748852214413 HTTP/1.1" 200 -
+2025-06-02 10:16:55,690 - INFO - 172.17.18.160 - - [02/Jun/2025 10:16:55] "GET /api/systems HTTP/1.1" 200 -
+2025-06-02 10:17:05,502 - INFO - Base de données initialisée avec succès
+2025-06-02 10:17:05,503 - INFO - Démarrage du serveur sur le port 5001
+2025-06-02 10:17:05,503 - INFO - Dossier des fichiers: /Users/arthur_smartelia/ScanIp/files
+2025-06-02 10:17:05,512 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://172.17.18.160:5001
+2025-06-02 10:17:05,512 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-02 10:17:07,233 - INFO - 172.17.18.160 - - [02/Jun/2025 10:17:07] "GET / HTTP/1.1" 200 -
+2025-06-02 10:17:07,312 - INFO - 172.17.18.160 - - [02/Jun/2025 10:17:07] "GET /api/systems?_=1748852227255 HTTP/1.1" 200 -
+2025-06-02 10:17:08,003 - INFO - 172.17.18.160 - - [02/Jun/2025 10:17:08] "GET / HTTP/1.1" 200 -
+2025-06-02 10:17:08,085 - INFO - 172.17.18.160 - - [02/Jun/2025 10:17:08] "GET /api/systems?_=1748852228019 HTTP/1.1" 200 -
+2025-06-02 10:17:08,670 - INFO - 172.17.18.160 - - [02/Jun/2025 10:17:08] "GET / HTTP/1.1" 200 -
+2025-06-02 10:17:08,749 - INFO - 172.17.18.160 - - [02/Jun/2025 10:17:08] "GET /api/systems?_=1748852228686 HTTP/1.1" 200 -
+2025-06-02 10:18:47,014 - INFO - Base de données initialisée avec succès
+2025-06-02 10:18:47,014 - INFO - Démarrage du serveur sur le port 5001
+2025-06-02 10:18:47,015 - INFO - Dossier des fichiers: /Users/arthur_smartelia/ScanIp/files
+2025-06-02 10:18:47,026 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://172.17.18.160:5001
+2025-06-02 10:18:47,026 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-02 10:18:48,780 - INFO - 172.17.18.160 - - [02/Jun/2025 10:18:48] "GET / HTTP/1.1" 200 -
+2025-06-02 10:18:48,886 - INFO - 172.17.18.160 - - [02/Jun/2025 10:18:48] "GET /api/systems?_=1748852328842 HTTP/1.1" 200 -
