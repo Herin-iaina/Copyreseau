@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Configuration
-SERVER_URL="http://172.17.18.160:5001"
+SERVER_URL="http://172.17.17.72:5001"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="$PROJECT_DIR/logs"
 LOG_FILE="$LOG_DIR/host_client.log"
 PID_FILE="$PROJECT_DIR/host_client.pid"
 # CHECK_INTERVAL=10  # 10 secondes pour le debug
-CHECK_INTERVAL=3600  # 1h pour la production
+CHECK_INTERVAL=1800  # 1h = 3600 / 1800 = 30 minutes pour la production
 MAX_RETRIES=3  # Nombre maximum de tentatives de connexion
 RETRY_DELAY=60  # Délai entre les tentatives en secondes
 
@@ -98,12 +98,12 @@ get_memory_info() {
 
 # Fonction pour obtenir les informations disque
 get_disk_info() {
-    # Utilise df -H pour avoir les valeurs en Go
-    local total=$(df -H / | awk 'NR==2 {print $2}' | sed 's/G//')
-    local used=$(df -H / | awk 'NR==2 {print $3}' | sed 's/G//')
-    local free=$(df -H / | awk 'NR==2 {print $4}' | sed 's/G//')
-    local percent=$(df -H / | awk 'NR==2 {print $5}' | sed 's/%//')
-    echo "{\"total\":$total,\"used\":$used,\"free\":$free,\"percent\":$percent}"
+    # Utilise df -h pour avoir les valeurs en format lisible
+    local total=$(df -h / | awk 'NR==2 {print $2}' | sed 's/G//')
+    local used=$(df -h / | awk 'NR==2 {print $3}' | sed 's/G//')
+    local free=$(df -h / | awk 'NR==2 {print $4}' | sed 's/G//')
+    local percent=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
+    echo "{\"total\":\"$total\",\"used\":\"$used\",\"free\":\"$free\",\"percent\":\"$percent\"}"
 }
 
 # Fonction pour obtenir les applications en cours d'exécution
