@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-SERVER_URL="http://172.17.18.173:5001"
+SERVER_URL="http://172.17.18.160:5001"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="$PROJECT_DIR/logs"
 LOG_FILE="$LOG_DIR/host_client.log"

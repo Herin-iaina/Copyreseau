@@ -199,7 +199,10 @@ def get_systems_data():
                         'battery': system_info.get('battery'),
                         'current_user': system_info.get('current_user'),
                         'boot_time': system_info.get('boot_time'),
-                        'disk': system_info.get('disk')
+                        'disk': system_info.get('disk'),
+                        'running_apps': system_info.get('running_apps'),
+                        'cpu': system_info.get('cpu'),
+                        'memory': system_info.get('memory')
                     })
         return jsonify({'data': systems})
     except Exception as e:

@@ -62,9 +62,26 @@
                             <th>Utilisateur</th>
                             <th>Démarrage</th>
                             <th>Disque</th>
+                            <th>Applications</th>
+                            <th>Mémoire</th>
                         </tr>
                     </thead>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour les détails du système -->
+    <div class="modal fade" id="systemDetailsModal" tabindex="-1" aria-labelledby="systemDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="systemDetailsModalLabel">Détails du Système</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="systemDetails" class="bg-light p-3 rounded"></pre>
+                </div>
             </div>
         </div>
     </div>
@@ -129,6 +146,7 @@
                     { 
                         data: 'disk',
                         render: function(data) {
+                            // console.log(data);
                             if (!data) return 'N/A';
                             const percent = data.percent;
                             const colorClass = percent > 90 ? 'disk-warning' : '';
@@ -136,6 +154,35 @@
                             return `<div class="${colorClass}">
                                 <i class="fas fa-hdd me-1"></i>
                                 ${data.free}GB / ${data.total}GB libres (${percent}%)
+                            </div>`;
+                        }
+                    },
+                    {
+                        data: 'running_apps',
+                        render: function(data) {
+                            // console.log(data);
+                            if (!data) return 'N/A';
+                            const apps = Object.keys(data).filter(app => data[app]);
+                            return `<div class="small">
+                                <i class="fas fa-window-maximize me-1"></i>
+                                ${apps.length} applications
+                                <div class="text-muted">${apps.slice(0, 3).join(', ')}${apps.length > 3 ? '...' : ''}</div>
+                            </div>`;
+                        }
+                    },
+                    {
+                        data: 'memory',
+                        render: function(data) {
+                            console.log(data);
+                            if (!data) return 'N/A';
+                            const percent = data.percent;
+                            let colorClass = '';
+                            if (percent > 90) colorClass = 'disk-warning';
+                            else if (percent > 70) colorClass = 'battery-medium';
+                            
+                            return `<div class="${colorClass}">
+                                <i class="fas fa-memory me-1"></i>
+                                ${data.used.toFixed(1)}GB / ${data.total}GB (${percent}%)
                             </div>`;
                         }
                     }
@@ -146,7 +193,22 @@
                 },
                 pageLength: 25,
                 autoWidth: false,
-                responsive: true
+                responsive: true,
+                rowCallback: function(row, data) {
+                    $(row).css('cursor', 'pointer');
+                }
+            });
+
+            // Gestionnaire de clic sur une ligne
+            $('#systemsTable tbody').on('click', 'tr', function() {
+                const data = $('#systemsTable').DataTable().row(this).data();
+                // Récupérer les données complètes depuis l'API
+                $.get('/api/systems', function(allData) {
+                    const systemData = allData.find(system => system.hostname === data.hostname);
+                    const modal = new bootstrap.Modal(document.getElementById('systemDetailsModal'));
+                    document.getElementById('systemDetails').textContent = JSON.stringify(systemData, null, 2);
+                    modal.show();
+                });
             });
         });
     </script>
