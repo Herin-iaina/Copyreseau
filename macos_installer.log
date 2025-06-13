@@ -816,3 +816,21 @@
 2025-06-02 10:46:47,659 - INFO - Informations système reçues de MBP204-SMARTELIA.local (172.17.18.160)
 2025-06-02 10:46:47,659 - INFO - 172.17.18.160 - - [02/Jun/2025 10:46:47] "POST /system_info HTTP/1.1" 200 -
 2025-06-02 10:46:47,680 - INFO - 172.17.18.160 - - [02/Jun/2025 10:46:47] "[33mPOST /report HTTP/1.1[0m" 404 -
+2025-06-13 14:41:28,564 - INFO - Base de données initialisée avec succès
+2025-06-13 14:41:28,564 - INFO - Démarrage du serveur sur le port 5001
+2025-06-13 14:41:28,564 - INFO - Dossier des fichiers: /Users/arthur_smartelia/ScanIp/files
+2025-06-13 14:41:28,590 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://172.17.19.7:5001
+2025-06-13 14:41:28,590 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-13 14:42:12,061 - INFO - 172.17.18.118 - - [13/Jun/2025 14:42:12] "[33mGET /files HTTP/1.1[0m" 404 -
+2025-06-13 14:44:52,295 - INFO - 172.17.19.7 - - [13/Jun/2025 14:44:52] "[33mGET /files HTTP/1.1[0m" 404 -
+2025-06-13 14:57:04,999 - INFO - Base de données initialisée avec succès
+2025-06-13 14:57:05,000 - INFO - Démarrage du serveur sur le port 5001
+2025-06-13 14:57:05,000 - INFO - Dossier des fichiers: /Users/arthur_smartelia/ScanIp/files
+2025-06-13 14:57:05,017 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://172.17.19.7:5001
+2025-06-13 14:57:05,017 - INFO - [33mPress CTRL+C to quit[0m

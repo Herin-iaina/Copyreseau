@@ -28,8 +28,8 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 APPS_DIR = os.path.join(BASE_DIR, 'apps')  # Dossier contenant les applications
 
 # Configuration SSH
-SSH_USERNAME = "smartelia"
-SSH_PASSWORD = "WeAr24DM!n"
+SSH_USERNAME = "vv"
+SSH_PASSWORD = "nnn"
 
 # Configuration du logging
 logging.basicConfig(
@@ -392,6 +392,35 @@ def export_xlsx():
     except Exception as e:
         log("ERROR", f"Erreur lors de l'export XLSX: {str(e)}")
         return jsonify({'error': str(e)}), 500
+    
+    
+@app.route('/files', methods=['GET'])
+def list_files():
+    """Liste les fichiers disponibles"""
+    try:
+        files = []
+        for file in os.listdir(FILES_FOLDER):
+            file_path = os.path.join(FILES_FOLDER, file)
+            if os.path.isfile(file_path):
+                files.append({
+                    'name': file,
+                    'size': os.path.getsize(file_path),
+                    'modified': os.path.getmtime(file_path)
+                })
+        return jsonify({'files': files}), 200
+    except Exception as e:
+        log("ERROR", f"Erreur lors de la liste des fichiers: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/files/<path:filename>')
+def serve_file(filename):
+    """Sert un fichier depuis le dossier files"""
+    try:
+        return send_file(os.path.join(FILES_FOLDER, filename))
+    except Exception as e:
+        log("ERROR", f"Erreur lors de la récupération du fichier {filename}: {str(e)}")
+        return jsonify({'error': str(e)}), 404
 
 if __name__ == '__main__':
     try:
