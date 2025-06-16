@@ -14,8 +14,8 @@ import glob
 
 # Configuration SSH
 USE_SSH = True  # Mettre à False pour désactiver SSH
-SSH_USERNAME = "smartelia"  # Remplacer par votre nom d'utilisateur
-SSH_PASSWORD = "WeAr24DM!n"  # Remplacer par votre mot de passe
+SSH_USERNAME = ""  # Remplacer par votre nom d'utilisateur
+SSH_PASSWORD = "!n"  # Remplacer par votre mot de passe
 
 # Configuration des applications macOS
 APPLICATIONS_TO_CHECK = [
