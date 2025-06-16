@@ -135,6 +135,8 @@ get_system_info() {
     local hostname=$(get_hostname)
     local ip=$(get_ip)
     local current_user=$(stat -f%Su /dev/console)
+    local macos_version=$(sw_vers -productVersion)
+    local macos_build=$(sw_vers -buildVersion)
     
     # Obtenir les statistiques réseau
     local bytes_sent=$(netstat -ib | awk '/en0/ {print $7}' | head -n1)
@@ -153,6 +155,8 @@ get_system_info() {
         \"current_user\": \"$current_user\",
         \"running_apps\": $(get_running_apps),
         \"boot_time\": \"$(date -r $(sysctl -n kern.boottime | awk '{print $4}' | sed 's/,//') "+%Y-%m-%d %H:%M:%S")\",
+        \"macos_version\": \"$macos_version\",
+        \"macos_build\": \"$macos_build\",
         \"network\": {
             \"bytes_sent\": $bytes_sent,
             \"bytes_recv\": $bytes_recv

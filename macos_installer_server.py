@@ -202,7 +202,9 @@ def get_systems_data():
                         'disk': system_info.get('disk'),
                         'running_apps': system_info.get('running_apps'),
                         'cpu': system_info.get('cpu'),
-                        'memory': system_info.get('memory')
+                        'memory': system_info.get('memory'),
+                        'macos_version': system_info.get('macos_version'),
+                        'macos_build': system_info.get('macos_build')
                     })
         return jsonify({'data': systems})
     except Exception as e:
@@ -320,6 +322,8 @@ def export_csv():
                         'Hostname': hostname,
                         'IP': data.get('ip'),
                         'Last Update': data.get('timestamp'),
+                        'macOS Version': system_info.get('macos_version'),
+                        'macOS Build': system_info.get('macos_build'),
                         'Battery %': battery.get('percent'),
                         'Battery Max Capacity (%)': battery.get('max_capacity_percent'),
                         'Battery Condition': battery.get('condition'),
@@ -366,6 +370,8 @@ def export_xlsx():
                         'Hostname': hostname,
                         'IP': data.get('ip'),
                         'Last Update': data.get('timestamp'),
+                        'macOS Version': system_info.get('macos_version'),
+                        'macOS Build': system_info.get('macos_build'),
                         'Battery %': battery.get('percent'),
                         'Battery Max Capacity (%)': battery.get('max_capacity_percent'),
                         'Battery Condition': battery.get('condition'),
