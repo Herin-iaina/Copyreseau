@@ -19,3 +19,11 @@
 *.pyzwzw
 *.zip
 *.apk
+# Ignorer tous les fichiers DMG
+*.dmg
+**/*.dmg
+*.app.dmg
+**/*.app.dmg
+*.app
+*.app.zip
+*.app.dmg
