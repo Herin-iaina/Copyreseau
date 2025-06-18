@@ -472,6 +472,11 @@ def serve_file(filename):
         log("ERROR", f"Erreur lors de la récupération du fichier {filename}: {str(e)}")
         return jsonify({'error': str(e)}), 404
 
+@app.route('/settings')
+def settings():
+    """Page de configuration"""
+    return render_template('settings.html')
+
 if __name__ == '__main__':
     try:
         # Vérifier les prérequis
