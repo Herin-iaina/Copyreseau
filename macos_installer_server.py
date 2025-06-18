@@ -477,6 +477,47 @@ def settings():
     """Page de configuration"""
     return render_template('settings.html')
 
+@app.route('/reset_data', methods=['POST'])
+def reset_data():
+    """Réinitialise toutes les données du serveur (infos systèmes, logs, base, etc.)"""
+    try:
+        # Suppression des fichiers JSON d'infos systèmes
+        errors = []
+        for filename in os.listdir(SYSTEM_INFO_DIR):
+            if filename.endswith('.json'):
+                try:
+                    os.remove(os.path.join(SYSTEM_INFO_DIR, filename))
+                except Exception as e:
+                    errors.append(f"Impossible de supprimer {filename}: {str(e)}")
+        # Suppression du fichier de log
+        try:
+            if os.path.exists(LOG_FILE):
+                os.remove(LOG_FILE)
+        except Exception as e:
+            errors.append(f"Impossible de supprimer le log: {str(e)}")
+        # Suppression de la base de données
+        try:
+            if os.path.exists(DB_FILE):
+                os.remove(DB_FILE)
+        except Exception as e:
+            errors.append(f"Impossible de supprimer la base: {str(e)}")
+        # Suppression du fichier de scan
+        try:
+            if os.path.exists(SCAN_RESULTS_FILE):
+                os.remove(SCAN_RESULTS_FILE)
+        except Exception as e:
+            errors.append(f"Impossible de supprimer le scan: {str(e)}")
+        # Réinitialisation de la base de données
+        try:
+            init_db()
+        except Exception as e:
+            errors.append(f"Impossible de réinitialiser la base: {str(e)}")
+        if errors:
+            return jsonify({'error': 'Certaines opérations ont échoué.', 'details': '; '.join(errors)}), 500
+        return jsonify({'message': 'Toutes les données ont été réinitialisées avec succès.'}), 200
+    except Exception as e:
+        return jsonify({'error': 'Erreur lors de la réinitialisation.', 'details': str(e)}), 500
+
 if __name__ == '__main__':
     try:
         # Vérifier les prérequis
