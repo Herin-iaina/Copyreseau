@@ -1,0 +1,27 @@
+Instructions de désinstallation manuelle de Smartelia Client
+====================================================
+
+1. Ouvrez le Terminal (Applications > Utilitaires > Terminal)
+
+2. Copiez et collez les commandes suivantes une par une :
+
+   # Vérifier si le service est en cours d'exécution
+   ps aux | grep host_client.sh
+
+   # Si vous voyez le processus en cours d'exécution, arrêtez-le avec :
+   sudo killall host_client.sh
+
+   # Supprimer les fichiers
+   sudo rm -f /Library/LaunchDaemons/com.smartelia.hostclient.plist
+   sudo rm -f /usr/local/bin/host_client.sh
+   sudo rm -f /var/log/host_client.*
+
+3. Entrez votre mot de passe administrateur lorsque demandé
+
+4. Vérifier que tout est bien arrêté :
+   # Cette commande ne devrait rien afficher si le service est arrêté
+   ps aux | grep host_client.sh
+
+5. L'application est maintenant complètement désinstallée
+
+Note : Si vous voyez des messages d'erreur concernant des fichiers manquants, c'est normal si certains fichiers ont déjà été supprimés. 
