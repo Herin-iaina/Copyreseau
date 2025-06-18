@@ -398,8 +398,53 @@ def export_xlsx():
     except Exception as e:
         log("ERROR", f"Erreur lors de l'export XLSX: {str(e)}")
         return jsonify({'error': str(e)}), 500
-    
-    
+
+@app.route('/export/xml')
+def export_xml():
+    """Exporte les données au format XML"""
+    try:
+        systems = []
+        for filename in os.listdir(SYSTEM_INFO_DIR):
+            if filename.endswith('.json'):
+                hostname = filename[:-5].split('.')[0]  # tronquer le hostname
+                file_path = os.path.join(SYSTEM_INFO_DIR, filename)
+                with open(file_path, 'r') as f:
+                    data = json.load(f)
+                    system_info = data.get('system_info', {})
+                    battery = system_info.get('battery', {})
+                    disk = system_info.get('disk', {})
+                    systems.append({
+                        'Hostname': hostname,
+                        'IP': data.get('ip'),
+                        'Last Update': data.get('timestamp'),
+                        'macOS Version': system_info.get('macos_version'),
+                        'macOS Build': system_info.get('macos_build'),
+                        'Battery %': battery.get('percent'),
+                        'Battery Max Capacity (%)': battery.get('max_capacity_percent'),
+                        'Battery Condition': battery.get('condition'),
+                        'Power Plugged': battery.get('power_plugged'),
+                        'Battery Time Left': battery.get('time_left'),
+                        'Current User': system_info.get('current_user'),
+                        'Boot Time': system_info.get('boot_time'),
+                        'Disk Total (GB)': disk.get('total'),
+                        'Disk Free (GB)': disk.get('free'),
+                        'Disk Usage %': disk.get('percent')
+                    })
+        # Créer le DataFrame et exporter en XML
+        df = pd.DataFrame(systems)
+        output = io.BytesIO()
+        df.to_xml(output, index=False, root_name='systems', row_name='system', encoding='utf-8', xml_declaration=True, pretty_print=True)
+        output.seek(0)
+        return send_file(
+            output,
+            mimetype='application/xml',
+            as_attachment=True,
+            download_name=f'systems_info_{datetime.now().strftime("%Y%m%d_%H%M%S")}.xml'
+        )
+    except Exception as e:
+        log("ERROR", f"Erreur lors de l'export XML: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/files', methods=['GET'])
 def list_files():
     """Liste les fichiers disponibles"""
@@ -417,7 +462,6 @@ def list_files():
     except Exception as e:
         log("ERROR", f"Erreur lors de la liste des fichiers: {str(e)}")
         return jsonify({'error': str(e)}), 500
-
 
 @app.route('/files/<path:filename>')
 def serve_file(filename):

@@ -98,6 +98,7 @@
                         <tr>
                             <th>Hostname</th>
                             <th>IP</th>
+                            <th>macOS</th>
                             <th>Dernière Mise à Jour</th>
                             <th>Batterie</th>
                             <th>Utilisateur</th>
@@ -148,6 +149,7 @@
                         }
                     },
                     { data: 'ip' },
+                    { data: 'macos_version', title: 'macOS' },
                     { 
                         data: 'last_update',
                         render: function(data) {
@@ -258,6 +260,10 @@
                         <div class="info-item">
                             <span class="info-label">Adresse IP:</span>
                             <span class="info-value">${data.ip}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Version macOS :</span>
+                            <span class="info-value">${data.macos_version ? data.macos_version : 'N/A'} (${data.macos_build ? data.macos_build : ''})</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Dernière mise à jour:</span>
