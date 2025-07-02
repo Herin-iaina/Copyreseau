@@ -14,8 +14,8 @@ import glob
 
 # Configuration SSH
 USE_SSH = True  # Mettre à False pour désactiver SSH
-SSH_USERNAME = ""  # Remplacer par votre nom d'utilisateur
-SSH_PASSWORD = "!n"  # Remplacer par votre mot de passe
+SSH_USERNAME = "smartelia"  # Remplacer par votre nom d'utilisateur
+SSH_PASSWORD = "WeAr24DM!n"  # Remplacer par votre mot de passe
 
 # Configuration des applications macOS
 APPLICATIONS_TO_CHECK = [
@@ -27,6 +27,43 @@ APPLICATIONS_TO_CHECK = [
 # Chemins des applications sur macOS
 APPLICATIONS_PATH = "Applications"  # Chemin relatif
 FILES_PATH = "/Users/smartelia/files"  # Chemin sur le serveur
+
+macbook_pro_models = {
+    "Mac16,6": ("14 pouces", 2024),
+    "Mac16,8": ("14 pouces", 2024),
+    "Mac16,7": ("16 pouces", 2024),
+    "Mac16,5": ("16 pouces", 2024),
+    "Mac15,3": ("14 pouces", 2023),
+    "Mac15,6": ("14 pouces", 2023),
+    "Mac16,1": ("14 pouces", 2024),
+    "Mac16,6": ("14 pouces", 2024),
+    "Mac16,8": ("14 pouces", 2024),
+    "Mac16,7": ("16 pouces", 2024),
+    "Mac16,5": ("16 pouces", 2024),
+    "Mac15,3": ("14 pouces", 2023),
+    "Mac15,6": ("14 pouces", 2023),
+    "Mac15,8": ("14 pouces", 2023),
+    "Mac15,10":("14 pouces", 2023),
+    "Mac15,7": ("16 pouces", 2023),
+    "Mac15,9": ("16 pouces", 2023),
+    "Mac15,11":("16 pouces", 2023),
+    "Mac14,5": ("14 pouces", 2023),
+    "Mac14,9": ("14 pouces", 2023),
+    "Mac14,6": ("16 pouces", 2023),
+    "Mac14,10":("16 pouces", 2023),
+    "Mac14,7": ("13 pouces", 2022),
+    "MacBookPro18,3":("14 pouces", 2021),
+    "MacBookPro18,4":("14 pouces", 2021),
+    "MacBookPro18,1":("16 pouces", 2021),
+    "MacBookPro18,2":("16 pouces", 2021),
+    "MacBookPro17,1":("13 pouces", 2020),
+    "MacBookPro16,3":("13 pouces", 2020),
+    "MacBookPro16,2":("13 pouces", 2020),
+    "MacBookPro16,1":("16 pouces", 2019),
+    "MacBookPro16,4":("16 pouces", 2019),
+    "MacBookPro12,1": ("13 pouces", 2015),
+    "MacBookPro14,2": ("13 pouces", 2017),
+}
 
 def ping(ip):
     """Ping an IP address and return True if it responds"""
@@ -56,40 +93,40 @@ def get_mac_address(ip):
 
 def check_and_install_application(ssh, application_name):
     """Vérifie si l'application existe sur macOS et l'installe si nécessaire"""
-    try:
-        # Vérifier si l'application existe dans le dossier Applications
-        check_cmd = f'ls ~/{APPLICATIONS_PATH}/{application_name}'
-        
-        stdin, stdout, stderr = ssh.exec_command(check_cmd)
-        if stdout.channel.recv_exit_status() == 0:
-            # L'application existe, on vérifie si une mise à jour est nécessaire
-            print(f"Mise à jour de {application_name} sur {ssh.get_transport().getpeername()[0]}")
-            # Commande pour mettre à jour l'application
-            update_cmd = f'cd {FILES_PATH} && ./update_{application_name}'
-            ssh.exec_command(update_cmd)
-        else:
-            # L'application n'existe pas, on l'installe
-            print(f"Installation de {application_name} sur {ssh.get_transport().getpeername()[0]}")
-            
-            # Créer le dossier Applications s'il n'existe pas
-            ssh.exec_command(f'mkdir -p ~/{APPLICATIONS_PATH}')
-            
-            # Copier l'application depuis le serveur vers le client
-            copy_cmd = f'scp -r {FILES_PATH}/{application_name} ~/{APPLICATIONS_PATH}/'
-            ssh.exec_command(copy_cmd)
-            
-            # Vérifier si l'installation a réussi
-            time.sleep(5)  # Attendre un peu pour l'installation
-            stdin, stdout, stderr = ssh.exec_command(check_cmd)
-            if stdout.channel.recv_exit_status() == 0:
-                print(f"Installation de {application_name} réussie")
-            else:
-                print(f"Échec de l'installation de {application_name}")
-    except Exception as e:
-        print(f"Erreur lors de la vérification/installation de {application_name}: {str(e)}")
+    # try:
+    #     # Vérifier si l'application existe dans le dossier Applications
+    #     check_cmd = f'ls ~/{APPLICATIONS_PATH}/{application_name}'
+    #     
+    #     stdin, stdout, stderr = ssh.exec_command(check_cmd)
+    #     if stdout.channel.recv_exit_status() == 0:
+    #         # L'application existe, on vérifie si une mise à jour est nécessaire
+    #         print(f"Mise à jour de {application_name} sur {ssh.get_transport().getpeername()[0]}")
+    #         # Commande pour mettre à jour l'application
+    #         update_cmd = f'cd {FILES_PATH} && ./update_{application_name}'
+    #         ssh.exec_command(update_cmd)
+    #     else:
+    #         # L'application n'existe pas, on l'installe
+    #         print(f"Installation de {application_name} sur {ssh.get_transport().getpeername()[0]}")
+    #         
+    #         # Créer le dossier Applications s'il n'existe pas
+    #         ssh.exec_command(f'mkdir -p ~/{APPLICATIONS_PATH}')
+    #         
+    #         # Copier l'application depuis le serveur vers le client
+    #         copy_cmd = f'scp -r {FILES_PATH}/{application_name} ~/{APPLICATIONS_PATH}/'
+    #         ssh.exec_command(copy_cmd)
+    #         
+    #         # Vérifier si l'installation a réussi
+    #         time.sleep(5)  # Attendre un peu pour l'installation
+    #         stdin, stdout, stderr = ssh.exec_command(check_cmd)
+    #         if stdout.channel.recv_exit_status() == 0:
+    #             print(f"Installation de {application_name} réussie")
+    #         else:
+    #             print(f"Échec de l'installation de {application_name}")
+    # except Exception as e:
+    #     print(f"Erreur lors de la vérification/installation de {application_name}: {str(e)}")
 
 def try_ssh_connection(ip, username, password):
-    """Try to connect via SSH and get hostname"""
+    """Try to connect via SSH and get hostname, model info, and macOS version"""
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -98,16 +135,33 @@ def try_ssh_connection(ip, username, password):
         # Exécuter la commande hostname
         stdin, stdout, stderr = ssh.exec_command('hostname')
         hostname = stdout.read().decode().strip()
-        
-        # Vérifier et installer les applications si c'est une machine Smartelia
-        if is_smartelia_machine(hostname):
-            for app in APPLICATIONS_TO_CHECK:
-                check_and_install_application(ssh, app)
+
+        # Récupérer le Model Name et Model Identifier
+        stdin, stdout, stderr = ssh.exec_command('system_profiler SPHardwareDataType | grep "Model Name\\|Model Identifier"')
+        model_info = stdout.read().decode().replace('\n', ' ').strip()
+
+        # Récupérer la version de macOS
+        stdin, stdout, stderr = ssh.exec_command('sw_vers -productVersion')
+        macos_version = stdout.read().decode().strip()
         
         ssh.close()
-        return hostname if hostname else "Unknown"
+        return {
+            'hostname': hostname if hostname else "Unknown",
+            'model_info': model_info if model_info else "Unknown",
+            'macos_version': macos_version if macos_version else "Unknown"
+        }
     except:
-        return "Unknown"
+        return {
+            'hostname': "Unknown",
+            'model_info': "Unknown",
+            'macos_version': "Unknown"
+        }
+
+def extract_model_identifier(model_info):
+    match = re.search(r'(Mac(?:BookPro)?[0-9,]+|Mac[0-9,]+)', model_info)
+    if match:
+        return match.group(1)
+    return "Unknown"
 
 def scan_ip(ip, ssh_credentials=None):
     """Scan a single IP address"""
@@ -115,15 +169,33 @@ def scan_ip(ip, ssh_credentials=None):
         if ping(ip):
             mac = get_mac_address(ip)
             hostname = "Unknown"
+            model_info = "Unknown"
+            macos_version = "Unknown"
+            model_identifier = "Unknown"
+            taille = "Unknown"
+            annee = "Unknown"
             
             # Si SSH est activé, essayer la connexion SSH
             if USE_SSH and ssh_credentials:
-                hostname = try_ssh_connection(ip, ssh_credentials['username'], ssh_credentials['password'])
+                ssh_result = try_ssh_connection(ip, ssh_credentials['username'], ssh_credentials['password'])
+                if isinstance(ssh_result, dict):
+                    hostname = ssh_result.get('hostname', 'Unknown')
+                    model_info = ssh_result.get('model_info', 'Unknown')
+                    macos_version = ssh_result.get('macos_version', 'Unknown')
+                    model_identifier = extract_model_identifier(model_info)
+                    taille, annee = macbook_pro_models.get(model_identifier, ("Unknown", "Unknown"))
+                else:
+                    hostname = ssh_result
             
             return {
                 'ip': ip,
                 'mac': mac if mac else "Unknown",
-                'hostname': hostname if hostname else "Unknown"
+                'hostname': hostname if hostname else "Unknown",
+                'model_info': model_info if model_info else "Unknown",
+                'macos_version': macos_version if macos_version else "Unknown",
+                'model_identifier': model_identifier,
+                'taille': taille,
+                'annee': annee
             }
     except:
         pass
@@ -133,7 +205,10 @@ def save_to_csv(results, filename):
     """Save results to CSV file"""
     try:
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-            fieldnames = ['IP Address', 'MAC Address', 'Hostname']
+            fieldnames = [
+                'IP Address', 'MAC Address', 'Hostname', 'Model Info', 'macOS Version',
+                'Model Identifier', 'Taille', 'Annee'
+            ]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             
             writer.writeheader()
@@ -142,7 +217,12 @@ def save_to_csv(results, filename):
                     writer.writerow({
                         'IP Address': result.get('ip', 'Unknown'),
                         'MAC Address': result.get('mac', 'Unknown'),
-                        'Hostname': result.get('hostname', 'Unknown')
+                        'Hostname': result.get('hostname', 'Unknown'),
+                        'Model Info': result.get('model_info', 'Unknown'),
+                        'macOS Version': result.get('macos_version', 'Unknown'),
+                        'Model Identifier': result.get('model_identifier', 'Unknown'),
+                        'Taille': result.get('taille', 'Unknown'),
+                        'Annee': result.get('annee', 'Unknown')
                     })
     except Exception as e:
         print(f"Erreur lors de la sauvegarde du fichier CSV: {str(e)}")
